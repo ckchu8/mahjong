@@ -25,7 +25,7 @@ export default class Hand {
 
   to_s() {
     var result = [];
-    $.each(this.melds, function(index, meld) {
+    this.melds.forEach(meld => {
       result.push(meld.to_s());
     });
     return result.join("\n");

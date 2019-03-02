@@ -1,6 +1,28 @@
 <template>
   <div id="app">
 
+    <div class="wind-selector inner-wrapper">
+      <div class="flex-row">
+
+        <div class="flex-row__col">
+          <div class="wind-selector__label">Seat Wind</div>
+          <WindSelector
+            :hand="hand"
+            type="seat">
+          ></WindSelector>
+        </div>
+
+        <div class="flex-row__col">
+          <div class="wind-selector__label">Round Wind</div>
+          <WindSelector
+            :hand="hand"
+            type="round">
+          ></WindSelector>
+        </div>
+
+      </div>
+    </div>
+
     <AdditionalOptions
       :hand='hand'
     ></AdditionalOptions>
@@ -19,11 +41,13 @@ import Hand from './classes/hand.js'
 import { Helpers } from './classes/helpers.js'
 import { Suits, Winds, Dragons, MeldTypes } from './classes/constants.js'
 import AdditionalOptions from './components/AdditionalOptions.vue'
+import WindSelector from './components/WindSelector.vue'
 
 export default {
   name: 'app',
   components: {
-    AdditionalOptions
+    AdditionalOptions,
+    WindSelector,
   },
   data: function() {
     return {
@@ -53,13 +77,9 @@ export default {
 }
 </script>
 
-<style>
-body {
-  background: #fff;
-  color: #333;
-  font: 62.5% Verdana, Arial, sans-serif;
-  line-height: 1.6;
-}
+<style lang="scss">
+@import './assets/bootstrap.min.css';
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -72,11 +92,11 @@ li {
 #app {
   max-width: 1000px;
   margin: 30px auto;
-  font-size: 1.6em;
 }
 .inner-wrapper {
   max-width: 800px;
   margin: 0 auto;
+  padding: 0 20px;
 
 }
 .flex-row {
@@ -93,22 +113,14 @@ li {
 .calculate-action {
   text-align: center;
 }
-.btn {
-  font-size: 1.1em;
-  padding: 10px 15px;
-  border: 1px solid transparent;
-  border-radius: 5px;
+.wind-selector {
+  text-align: center;
 }
-.btn:hover {
-  cursor: pointer;
+.wind-selector__label {
+  padding-bottom: 5px;
 }
-.btn-primary {
-  background: #007bff;
-  border-color: #007bff;
-  color: #fff;
-}
-.btn-primary:hover {
-  background: #006de5;
-  border-color: #006de5;
+.btn-secondary {
+  background: #999;
+  border-color: #999;
 }
 </style>

@@ -12,7 +12,7 @@ export default class Meld {
   to_s() {
     var result = [];
     result.push(this.is_open ? 'Open:' : 'Closed:');
-    $.each(this.tiles, function(index, tile) {
+    this.tiles.forEach(tile => {
       result.push(tile.to_s());
     });
     return result.join(' ');
