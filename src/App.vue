@@ -23,14 +23,62 @@
       </div>
     </div>
 
+    <hr />
+
+    <HandDisplay
+      v-if="hand.melds.length > 0"
+      :melds="hand.melds"
+      :current_meld_id="current_meld_id"
+      :win_selection="promptWinner || lastStep"
+      :winning_tile="hand.winning_tile"
+      @add-winner="addWinner"
+    ></HandDisplay>
+
+    <div class="winning_tile" v-show="promptWinner">
+      <div class="alert alert-primary" role="alert">
+        Please select the winning tile
+      </div>
+    </div>
+
+    <hr />
+
     <MeldForm
       v-if="show_meld_form"
       :meld="hand.melds[current_meld_id]"
+      :prompt_winner="promptWinner"
+      :finished="lastStep"
+      @next-meld="nextMeld"
     ></MeldForm>
+
+    <hr />
 
     <AdditionalOptions
       :hand='hand'
     ></AdditionalOptions>
+
+    <div class="calculated_score" v-show="show_calculation">
+      <div class="alert alert-success" role="alert">
+        <div class="flex-row">
+
+          <div class="calculated_score-yakus flex-row__col">
+            <ul>
+              <li v-for="yaku in calculated.hands" :key="yaku">{{ yaku }}</li>
+            </ul>
+          </div>
+          <div class="calculated_score-numbers flex-row__col">
+            <ul>
+              <li v-if="calculated.han > 0"> {{ calculated.han }} Han </li>
+              <li v-if="calculated.fu > 0"> {{ calculated.fu }} Fu </li>
+              <li v-if="calculated.east_pay > 0" class="calculated_score-pay">East pays {{ calculated.east_pay }}</li> 
+              <li v-if="calculated.east_pay > 0" class="calculated_score-pay">Everyone else pays {{ calculated.other_pay }}</li>
+              <li v-if="calculated.east_pay === 0 && calculated.all" class="calculated_score-pay">All pay {{ calculated.other_pay }}</li>
+              <li v-if="calculated.east_pay === 0 && !calculated.all" class="calculated_score-pay">Player pays {{ calculated.other_pay }}</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
     <div class="calculate-action">
       <button @click="calculate" class="btn btn-primary">Calculate</button>
@@ -46,6 +94,7 @@ import { MeldTypes } from './classes/constants.js'
 import AdditionalOptions from './components/AdditionalOptions.vue'
 import WindSelector from './components/WindSelector.vue'
 import MeldForm from './components/MeldForm.vue'
+import HandDisplay from './components/HandDisplay.vue'
 
 export default {
   name: 'app',
@@ -53,6 +102,7 @@ export default {
     AdditionalOptions,
     WindSelector,
     MeldForm,
+    HandDisplay,
   },
   data: function() {
     return {
@@ -62,7 +112,7 @@ export default {
       last_meld: false,
       normal_melds: 0,
       pairs: 0,
-      show_calculate: false,
+      show_calculation: false,
       show_meld_form: true,
     };
   },
@@ -70,14 +120,40 @@ export default {
     this.hand.addMeld(new Meld(false, MeldTypes.CHI, [], 0)); 
   },
   computed: {
-
+    promptWinner: function() {
+      return this.last_meld && this.hand.winning_tile.length === 0;
+    },
+    lastStep: function() {
+      return this.last_meld && this.hand.winning_tile.length > 0;
+    },
   },
   methods: {
+    nextMeld: function() {
+      if( this.hand.melds[this.current_meld_id] === MeldTypes.PAIR ) {
+        this.pairs++;
+      }
+      else {
+        this.normal_melds++;
+      }
+      if( (this.normal_melds > 0 && (this.normal_melds + this.pairs) === 5) || this.pairs === 7) {
+        this.last_meld = true;
+      }
+      if(!this.last_meld) {
+        let next_id = this.hand.melds.length;
+        this.hand.addMeld(new Meld(false, MeldTypes.CHI, [], next_id));
+        this.current_meld_id = next_id;
+      }
+
+    },
+    addWinner: function(winning_tile) {
+      this.hand.winning_tile = winning_tile;
+    },
     calculate: function() {
       // make sure dora isn't empty
       this.hand.dora = this.hand.dora || 0;
       this.calculated = this.hand.calculate();
       this.calculated['all'] = this.hand.tsumo;
+      this.show_calculation = true;
     }
   }
 }

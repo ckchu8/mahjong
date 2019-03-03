@@ -35,6 +35,7 @@
 <script>
 import { MeldTypes, Suits } from '../classes/constants.js'
 import { Helpers } from '../classes/helpers.js'
+import Tile from '../classes/tile.js'
 import Tiles from './Tiles.vue'
 
 export default {
@@ -95,7 +96,26 @@ export default {
       return this.current_meld_type;
     },
     addTiles: function(tile) {
-      
+      var tiles = [];
+      // need error handling here
+      if(this.current_meld_type === MeldTypes.CHI) {
+        tiles = [new Tile(tile.suit, tile.value), new Tile(tile.suit, tile.value + 1), new Tile(tile.suit, tile.value + 2)];
+      }
+      else {
+        var additional = 0;
+        switch(this.current_meld_type) {
+          case MeldTypes.PAIR:
+            additional = 2; break;
+          case MeldTypes.PON:
+            additional = 3; break;
+          case MeldTypes.KAN:
+            additional = 4; break;
+        }
+        for(let i = 0; i < additional; ++i) {
+          tiles.push(new Tile(tile.suit, tile.value));
+        }
+      }
+      this.$emit('add-meld', { tiles: tiles, type: this.current_meld_type });
     },
   },
 }

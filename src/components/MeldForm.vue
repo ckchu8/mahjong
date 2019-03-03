@@ -1,6 +1,6 @@
 <template>
   
-  <div class="meld-form">
+  <div class="meld-form inner-wrapper">
     <div class="meld-form__opening-info">
 
       <div class="meld-form__opening-info--section meld-form__suits">
@@ -36,10 +36,11 @@
       <TileSelector
         :suit="current_suit"
         :meld="meld"
+        @add-meld="addTiles"
       ></TileSelector>
     </div>
 
-    <div class="meld-form__submit">
+    <div class="meld-form__submit" v-show="!prompt_winner && !finished">
       <input type="submit" @click="$emit('next-meld')" value="Next" class="btn btn-primary">
     </div>
   </div>
@@ -56,7 +57,7 @@ export default {
   components: {
     TileSelector,
   },
-  props: ['meld'],
+  props: ['meld', 'prompt_winner', 'finished'],
   data: function() {
     return {
       current_suit: Suits.DOTS,
