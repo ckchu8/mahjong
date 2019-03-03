@@ -33,7 +33,7 @@ export default class Tile {
   }
 
   isCharacters() {
-    return this.suit == Suits.CHARACTERS;
+    return this.suit === Suits.CHARACTERS;
   }
 
   isHonor() {

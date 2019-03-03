@@ -57,8 +57,8 @@ export default class Meld {
     return '';
   }
 
-  base_value() {
-    return this.tiles[0].value
+  baseValue() {
+    return this.tiles.length > 0 ? this.tiles[0].value : 0;
   }
 
   isDragon() {
@@ -86,23 +86,19 @@ export default class Meld {
   }
 
   isGreen() {
-    if(this.suit() == Suits.DRAGON && this.base_value() == Dragons.GREEN) {
+    let base_value = this.baseValue();
+    let suit = this.suit();
+    if(suit === Suits.DRAGON && base_value === Dragons.GREEN) {
       return true
     }
 
-    if(this.suit() == Suits.STICKS && this.isChi() && this.base_value() == 2) {
+    if(suit === Suits.STICKS && this.isChi() && base_value == 2) {
       return true
     }
 
-    if(this.suit() == Suits.STICKS && (this.isPon() || this.isKan() || this.isPair()) &&
-       (
-         this.base_value() == 2 ||
-         this.base_value() == 3 ||
-         this.base_value() == 4 ||
-         this.base_value() == 6 ||
-         this.base_value() == 8
-       )
-    ){
+    if(suit == Suits.STICKS &&
+      (this.isPon() || this.isKan() || this.isPair()) &&
+      [2,3,4,6,8].indexOf(base_value) > -1) {
       return true
     }
 

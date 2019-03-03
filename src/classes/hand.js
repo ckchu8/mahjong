@@ -49,7 +49,7 @@ export default class Hand {
       han += num_dora
 
       if(num_dora > 0){
-        yakus.push(parseInt(this.dora) + ' Dora')
+        yakus.push(num_dora + ' Dora')
       }
 
       if(han < 5){
@@ -70,15 +70,11 @@ export default class Hand {
       } else {
         base_points = 8000
       }
-
-      console.log('Han: ' + han)
     }
-    console.log('Yakus: ' + yakus)
-    console.log('Base Points: ' + base_points)
 
     let payments = null;
 
-    if(this.seat_wind == Winds.EAST){
+    if(this.seat_wind === Winds.EAST){
       if(this.tsumo){
         let two_x = Math.ceil(2*base_points / 100) * 100
         payments = [0, two_x]
@@ -86,7 +82,7 @@ export default class Hand {
         let six_x = Math.ceil(6*base_points / 100) * 100
         payments = [0, six_x]
       }
-    } else{
+    } else {
       if(this.tsumo){
         let two_x = Math.ceil(2*base_points / 100) * 100
         let one_x = Math.ceil(base_points / 100) * 100
@@ -164,6 +160,7 @@ export default class Hand {
 
   determineHan(yakus){
     let han = 0
+    let is_concealed = this.isConcealed();
 
     if(this.riichi){
       yakus.push('Riichi')
@@ -208,7 +205,7 @@ export default class Hand {
     if(this.isMixedTripleChow()){
       yakus.push('Mixed Triple Chow (San Shoku Doujun)')
       han++
-      if(this.isConcealed()){
+      if(is_concealed){
         han++
       }
     }
@@ -216,17 +213,17 @@ export default class Hand {
     if(this.isStraight()){
       yakus.push('Pure Straight (Itsu)')
       han++
-      if(this.isConcealed()){
+      if(is_concealed){
         han++
       }
     }
 
-    let numDragons = this.numDragons()
+    let num_dragons = this.numDragons()
 
-    if(numDragons > 0)
+    if(num_dragons > 0)
     {
-      han += numDragons
-      yakus.push(numDragons + ' Dragon Pung (Yakuhai)')
+      han += num_dragons
+      yakus.push(num_dragons + ' Dragon Pung (Yakuhai)')
     }
 
     if(this.isSeatWind()){
@@ -242,7 +239,7 @@ export default class Hand {
     if(this.isMixedTerminals()){
       yakus.push('Outside Hand (Chanta)')
       han++
-      if(this.isConcealed()){
+      if(is_concealed){
         han++
       }
     }
@@ -276,7 +273,7 @@ export default class Hand {
       yakus.push('Half Flush (Honitsu)')
       han+=2
 
-      if(this.isConcealed()){
+      if(is_concealed){
         han++
       }
     }
@@ -295,7 +292,7 @@ export default class Hand {
       yakus.push('Terminals in All Sets (Junchan)')
       han+=2
 
-      if(this.isConcealed()){
+      if(is_concealed){
         han++
       }
     }
@@ -309,13 +306,12 @@ export default class Hand {
       yakus.push('Full Flush (Chinitsu)')
       han+=5
 
-      if(this.isConcealed()){
+      if(is_concealed){
         han++
       }
     }
 
     return han
-
   }
 
   determineFu(){
@@ -324,8 +320,9 @@ export default class Hand {
     }
 
     let base = 20
+    let is_concealed = this.isConcealed();
 
-    if(this.isConcealed() && !this.tsumo){
+    if(is_concealed && !this.tsumo){
       base += 10
     }
 
@@ -344,15 +341,18 @@ export default class Hand {
       base += val
     })
 
-    if(this.getPair().isDragon()){
+    let pair = this.getPair();
+
+    if(pair && pair.isDragon()){
       base += 2
     }
 
-    if(this.getPair().isWind()){
-      if(this.getPair().base_value() == this.seat_wind){
+    if(pair && pair.isWind()){
+      let base_value = pair.baseValue();
+      if(base_value === this.seat_wind){
         base += 2
       }
-      if(this.getPair().base_value() == this.round_wind){
+      if(base_value === this.round_wind){
         base += 2
       }
     }
@@ -367,11 +367,11 @@ export default class Hand {
     }
 
     // open pinfu (would have been all runs, but parts are not concealed) + 2
-    if(!this.isConcealed() &&
-        this.getChiMelds().length == 4 &&
+    if(!is_concealed &&
+        this.getChiMelds().length === 4 &&
         this.pairIsntSpecial() &&
         this.openWait()
-    ){
+    ) {
       base += 2
     }
 
@@ -399,18 +399,18 @@ export default class Hand {
   }
 
   winningMeld(){
-    return this.winning_tile[0]
+    return this.winning_tile.length > 0 ? this.winning_tile[0] : {};
   }
 
   winningTile(){
-    return this.winning_tile[1]
+    return this.winning_tile.length > 1 ? this.winning_tile[1] : {};
   }
 
   isConcealed() {
     let concealed = true;
 
     for(let i = 0; i < this.melds.length; i++){
-      if(this.melds[i].is_open && i != this.winningMeld()){
+      if(this.melds[i].is_open && i !== this.winningMeld()) {
         concealed = false
       }
     }
@@ -426,17 +426,15 @@ export default class Hand {
 
   isTriplePongs(){
     let pons = this.getPonKanMelds()
-    let values = pons.map(pon => pon.base_value())
-
-    console.log(values)
+    let values = pons.map(pon => pon.baseValue())
 
     return values.some(function(val) {
       return pons.some(function(pon) {
-        return pon.isDots() && pon.base_value() == val
+        return pon.isDots() && pon.baseValue() == val
       }) && pons.some(function(pon) {
-        return pon.isCharacters() && pon.base_value() == val
+        return pon.isCharacters() && pon.baseValue() == val
       }) && pons.some(function(pon) {
-        return pon.isSticks() && pon.base_value() == val
+        return pon.isSticks() && pon.baseValue() == val
       })
     })
   }
@@ -471,7 +469,7 @@ export default class Hand {
     // Ensure every suit matches first one
     let first_suit = first_meld.suit()
     return this.melds.every(function(meld) {
-      return meld.suit() == first_suit
+      return meld.suit() === first_suit
     })
   }
 
@@ -533,7 +531,7 @@ export default class Hand {
   }
 
   isSevenPairs(){
-    return this.melds.length == 7 && this.melds.every(function(meld) {
+    return this.melds.length === 7 && this.melds.every(function(meld) {
       return meld.isPair()
     })
   }
@@ -546,7 +544,8 @@ export default class Hand {
     }
 
     if(pair.isWind()){
-      if(pair.base_value() == this.seat_wind || pair.base_value() == this.round_wind){
+      let base_value = pair.baseValue();
+      if(base_value === this.seat_wind || base_value === this.round_wind){
         return false
       }
     }
@@ -588,15 +587,15 @@ export default class Hand {
 
   isMixedTripleChow(){
     let chis = this.getChiMelds()
-    let values = chis.map(chi => chi.base_value())
+    let values = chis.map(chi => chi.baseValue())
 
     return values.some(function(val) {
       return chis.some(function(chi) {
-        return chi.isDots() && chi.base_value() == val
+        return chi.isDots() && chi.baseValue() == val
       }) && chis.some(function(chi) {
-        return chi.isCharacters() && chi.base_value() == val
+        return chi.isCharacters() && chi.baseValue() == val
       }) && chis.some(function(chi) {
-        return chi.isSticks() && chi.base_value() == val
+        return chi.isSticks() && chi.baseValue() == val
       })
     })
   }
@@ -606,11 +605,11 @@ export default class Hand {
 
     return [Suits.DOTS, Suits.CHARACTERS, Suits.STICKS].some(function(suit) {
       return chis.some(function(chi) {
-        return chi.suit() == suit && chi.base_value() == 1
+        return chi.suit() == suit && chi.baseValue() == 1
       }) && chis.some(function(chi) {
-        return chi.suit() == suit && chi.base_value() == 4
+        return chi.suit() == suit && chi.baseValue() == 4
       }) && chis.some(function(chi) {
-        return chi.suit() == suit && chi.base_value() == 7
+        return chi.suit() == suit && chi.baseValue() == 7
       })
     })
   }
@@ -627,8 +626,8 @@ export default class Hand {
 
     for (let i = 0; i < chis.length; i++) {
       for(let j = i + 1; j < chis.length; j++){
-        if(chis[i].suit() == chis[j].suit() && chis[i].base_value() == chis[j].base_value()) {
-          if (orig_meld == null || (orig_meld.suit() != chis[i].suit() && orig_meld.base_value() != chis[i].base_value())){
+        if(chis[i].suit() == chis[j].suit() && chis[i].baseValue() == chis[j].baseValue()) {
+          if (orig_meld == null || (orig_meld.suit() != chis[i].suit() && orig_meld.baseValue() != chis[i].baseValue())){
             count += 1
             orig_meld = chis[i]
           }
@@ -668,14 +667,14 @@ export default class Hand {
   isSeatWind(){
     let seat_wind = this.seat_wind
     return this.getPonKanMelds().filter(meld => meld.isWind()).some(function(wind){
-      return wind.base_value() == seat_wind
+      return wind.baseValue() == seat_wind
     })
   }
 
   isPrevalentWind(){
     let round_wind = this.round_wind
     return this.getPonKanMelds().filter(meld => meld.isWind()).some(function(wind){
-      return wind.base_value() == round_wind
+      return wind.baseValue() == round_wind
     })
   }
 
