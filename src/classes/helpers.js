@@ -2,7 +2,7 @@ import { Suits } from './constants.js'
 
 var Helpers = {
   image_path: function(suit, value) {
-    return "images/" + suit + "-" + value + ".png";
+    return "assets/tiles/" + suit + "-" + value + ".png";
   },
   isHonorsSuit: function(suit) {
     return [ Suits.DRAGON, Suits.WIND ].indexOf(suit) !== -1;

@@ -54,7 +54,7 @@ export default class Meld {
     if(this.tiles.length > 0) {
       return this.tiles[0].suit;
     }
-    return 'no suit';
+    return '';
   }
 
   base_value() {

@@ -23,6 +23,11 @@
       </div>
     </div>
 
+    <MeldForm
+      v-if="show_meld_form"
+      :meld="hand.melds[current_meld_id]"
+    ></MeldForm>
+
     <AdditionalOptions
       :hand='hand'
     ></AdditionalOptions>
@@ -35,19 +40,19 @@
 </template>
 
 <script>
-import Tile from './classes/tile.js'
 import Meld from './classes/meld.js'
 import Hand from './classes/hand.js'
-import { Helpers } from './classes/helpers.js'
-import { Suits, Winds, Dragons, MeldTypes } from './classes/constants.js'
+import { MeldTypes } from './classes/constants.js'
 import AdditionalOptions from './components/AdditionalOptions.vue'
 import WindSelector from './components/WindSelector.vue'
+import MeldForm from './components/MeldForm.vue'
 
 export default {
   name: 'app',
   components: {
     AdditionalOptions,
     WindSelector,
+    MeldForm,
   },
   data: function() {
     return {
@@ -58,6 +63,7 @@ export default {
       normal_melds: 0,
       pairs: 0,
       show_calculate: false,
+      show_meld_form: true,
     };
   },
   created: function() {
@@ -70,8 +76,8 @@ export default {
     calculate: function() {
       // make sure dora isn't empty
       this.hand.dora = this.hand.dora || 0;
-      //this.calculated = this.hand.calculate();
-      //this.calculated['all'] = this.hand.tsumo;
+      this.calculated = this.hand.calculate();
+      this.calculated['all'] = this.hand.tsumo;
     }
   }
 }
@@ -120,7 +126,7 @@ li {
   padding-bottom: 5px;
 }
 .btn-secondary {
-  background: #999;
-  border-color: #999;
+  background: #7f8991;
+  border-color: #7f8991;
 }
 </style>
