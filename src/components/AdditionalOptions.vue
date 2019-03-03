@@ -1,6 +1,6 @@
 <template>
     
-  <div class="inner-wrapper additional_options">
+  <div class="inner-wrapper additional-options">
     
     <div class="flex-row">
       
@@ -44,7 +44,7 @@
     </div>
 
     <div class="flex-row">
-      <div class="flex-row__col">
+      <div class="flex-row__col additional-options__dora">
         <label for="dora">Dora</label>
         <input type="number" id="dora" v-model.number="hand.dora" />
       </div>
@@ -61,5 +61,15 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.additional-options__dora {
+  label {
+    margin-right: 10px;
+  }
+  input {
+    padding: 2px 5px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+  }
+}
 </style>

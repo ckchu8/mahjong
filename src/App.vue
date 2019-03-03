@@ -34,7 +34,7 @@
       @add-winner="addWinner"
     ></HandDisplay>
 
-    <div class="winning_tile" v-show="promptWinner">
+    <div class="winning-tile" v-show="promptWinner">
       <div class="alert alert-primary" role="alert">
         Please select the winning tile
       </div>
@@ -56,23 +56,23 @@
       :hand='hand'
     ></AdditionalOptions>
 
-    <div class="calculated_score" v-show="show_calculation">
+    <div class="calculated-score" v-show="show_calculation">
       <div class="alert alert-success" role="alert">
         <div class="flex-row">
 
-          <div class="calculated_score-yakus flex-row__col">
+          <div class="calculated-score__yakus flex-row__col">
             <ul>
               <li v-for="yaku in calculated.hands" :key="yaku">{{ yaku }}</li>
             </ul>
           </div>
-          <div class="calculated_score-numbers flex-row__col">
+          <div class="calculated-score__numbers flex-row__col">
             <ul>
               <li v-if="calculated.han > 0"> {{ calculated.han }} Han </li>
               <li v-if="calculated.fu > 0"> {{ calculated.fu }} Fu </li>
-              <li v-if="calculated.east_pay > 0" class="calculated_score-pay">East pays {{ calculated.east_pay }}</li> 
-              <li v-if="calculated.east_pay > 0" class="calculated_score-pay">Everyone else pays {{ calculated.other_pay }}</li>
-              <li v-if="calculated.east_pay === 0 && calculated.all" class="calculated_score-pay">All pay {{ calculated.other_pay }}</li>
-              <li v-if="calculated.east_pay === 0 && !calculated.all" class="calculated_score-pay">Player pays {{ calculated.other_pay }}</li>
+              <li v-if="calculated.east_pay > 0" class="calculated-score__pay">East pays {{ calculated.east_pay }}</li> 
+              <li v-if="calculated.east_pay > 0" class="calculated-score__pay">Everyone else pays {{ calculated.other_pay }}</li>
+              <li v-if="calculated.east_pay === 0 && calculated.all" class="calculated-score__pay">All pay {{ calculated.other_pay }}</li>
+              <li v-if="calculated.east_pay === 0 && !calculated.all" class="calculated-score__pay">Player pays {{ calculated.other_pay }}</li>
             </ul>
           </div>
 
@@ -82,6 +82,7 @@
 
     <div class="calculate-action">
       <button @click="calculate" class="btn btn-primary">Calculate</button>
+      <button @click="reset" class="btn btn-secondary">Reset</button>
     </div>
 
   </div>
@@ -154,6 +155,17 @@ export default {
       this.calculated = this.hand.calculate();
       this.calculated['all'] = this.hand.tsumo;
       this.show_calculation = true;
+    },
+    reset: function() {
+      this.hand = new Hand();
+      this.hand.addMeld(new Meld(false, MeldTypes.CHI, [], 0));
+      this.current_meld_id = 0;
+      this.calculated = {};
+      this.show_calculation = false;
+      this.normal_melds = 0;
+      this.pairs = 0;
+      this.last_meld = false;
+      this.show_meld_form = true;
     }
   }
 }
@@ -194,6 +206,10 @@ li {
 }
 .calculate-action {
   text-align: center;
+
+  .btn {
+    margin: 0 10px;
+  }
 }
 .wind-selector {
   text-align: center;
@@ -204,5 +220,21 @@ li {
 .btn-secondary {
   background: #7f8991;
   border-color: #7f8991;
+}
+.calculated-score {
+  max-width: 650px;
+  margin: 0 auto;
+
+  .calculated-score__yakus {
+    width: 60%;
+  }
+  .calculated-score__pay {
+    font-weight: 600;
+  }
+}
+.winning-tile {
+  max-width: 650px;
+  margin: 0 auto;
+  text-align: center;
 }
 </style>
