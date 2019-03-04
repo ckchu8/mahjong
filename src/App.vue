@@ -57,7 +57,10 @@
     ></AdditionalOptions>
 
     <div class="calculated-score" v-show="show_calculation">
-      <div class="alert alert-success" role="alert">
+      <div v-if="calculated.error" class="alert alert-danger" role="alert">
+        {{ calculated.error }}
+      </div>
+      <div v-else class="alert alert-success" role="alert">
         <div class="flex-row">
 
           <div class="calculated-score__yakus flex-row__col">

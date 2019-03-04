@@ -1,4 +1,4 @@
-import { Winds, Suits } from './constants.js';
+import { Winds, Suits, MeldTypes } from './constants.js';
 
 export default class Hand {
 
@@ -31,7 +31,53 @@ export default class Hand {
     return result.join("\n");
   }
 
+  checkValid() {
+    let normal_melds = 0;
+    let pairs = 0;
+    let tile_lookup = {};
+    let count = 0;
+    let too_many_tiles = false;
+
+    this.melds.forEach(meld => {
+      if(meld.tiles.length > 0) {
+        if(meld.type === MeldTypes.PAIR) {
+          ++pairs;
+        }
+        else {
+          ++normal_melds;
+        }
+      }
+      // stop checking each tile once we know we've run into an error
+      if(!too_many_tiles) {
+        meld.tiles.forEach(tile => {
+          count = tile_lookup[tile.to_s()] || 0;
+          tile_lookup[tile.to_s()] = ++count;
+          if(count > 4) {
+            too_many_tiles = true;
+          }
+        });
+      }
+    });
+
+    let valid = true;
+    let message = [];
+    if(!((normal_melds === 4 && pairs === 1) || (normal_melds === 0 && pairs === 7))) {
+      valid = false;
+      message.push('You do not have a valid hand combination.');
+    }
+    if(too_many_tiles) {
+      valid = false;
+      message.push("You have too many of a tile. (You can't have more than 4 of any tile.)");
+    }
+    
+    return { valid: valid, message: message.join(' ') };
+  }
+
   calculate() {
+    let check_result = this.checkValid();
+    if(!check_result.valid) {
+      return { error: check_result.message };
+    }
 
     let base_points = 0
     let han = 0

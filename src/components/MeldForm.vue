@@ -43,7 +43,7 @@
 
     <div class="meld-form__submit" v-show="!prompt_winner && !finished">
       <div class="meld-form__submit--button">
-        <input type="submit" @click="nextStep()" value="Next" class="btn btn-primary">
+        <input type="submit" @click="nextStep()" value="Next" class="btn btn-primary" :disabled="disableNext">
       </div>
       <div class="meld-form__submit--error">
         <span v-if="error" class="text-danger">{{ error }}</span>
@@ -78,6 +78,11 @@ export default {
     else if(this.$props.meld.suit() !== '') {
       this.current_suit = this.$props.meld.suit();
     }
+  },
+  computed: {
+    disableNext: function() {
+      return this.$props.meld.tiles.length === 0;
+    },
   },
   methods: {
     addTiles: function(tiles_info) {
