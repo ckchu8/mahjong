@@ -3,7 +3,7 @@
     <li
       v-for="index in range"
       :key="index"
-      :class="{ 'suit-selector__tile': true, active: current_tile === index }">
+      :class="{ 'suit-selector__tile': true, active: current_tile.value === index }">
         <a href="javascript:void(0)" @click="$emit('add-tile', { suit: suit, value: index })">
           <img :src="imageFor(index)" :alt="altFor(index)" />
         </a>

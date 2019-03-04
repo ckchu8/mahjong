@@ -37,11 +37,17 @@
         :suit="current_suit"
         :meld="meld"
         @add-meld="addTiles"
+        @set-error="setError"
       ></TileSelector>
     </div>
 
     <div class="meld-form__submit" v-show="!prompt_winner && !finished">
-      <input type="submit" @click="$emit('next-meld')" value="Next" class="btn btn-primary">
+      <div class="meld-form__submit--button">
+        <input type="submit" @click="nextStep()" value="Next" class="btn btn-primary">
+      </div>
+      <div class="meld-form__submit--error">
+        <span v-if="error" class="text-danger">{{ error }}</span>
+      </div>
     </div>
   </div>
 
@@ -62,6 +68,7 @@ export default {
     return {
       current_suit: Suits.DOTS,
       suits: Helpers.allSuits(),
+      error: '',
     }
   },
   created: function() {
@@ -91,6 +98,18 @@ export default {
     },
     changeOpen: function(value) {
       this.$props.meld.is_open = value;
+    },
+    setError: function(message) {
+      this.error = message;
+    },
+    nextStep: function() {
+      if(this.$props.meld.tiles.length === 0) {
+        this.error = 'Please select a tile';
+        return;
+      }
+
+      this.error = '';
+      this.$emit('next-meld');
     },
   }
 }
@@ -137,5 +156,11 @@ export default {
 }
 .meld-form__submit {
   padding-top: 15px;
+  display: flex;
+  align-items: center;
+
+  .meld-form__submit--button {
+    padding-right: 15px;
+  }
 }
 </style>

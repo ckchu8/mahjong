@@ -78,16 +78,27 @@ export default {
     },
     currentTile: function() {
       if(this.$props.meld.tiles.length > 0) {
-        return this.$props.meld.tiles[0];
+        let first_tile = this.$props.meld.tiles[0];
+        if(first_tile.suit === this.$props.suit) {
+          return first_tile;
+        }
       }
-      else {
-        return {};
-      }
+      return {};
     },
   },
   methods: {
     changeMeldType: function(new_meld_type) {
       this.current_meld_type = new_meld_type;
+
+      if(this.$props.meld.tiles.length > 0) {
+        // if we switch to chi, the highest tile is 7, so make sure we don't get 8 or 9
+        if(this.currentTile.value > 7 && this.current_meld_type === MeldTypes.CHI) {
+          this.addTiles({ suit: this.$props.suit, value: 7 });
+        }
+        else {
+          this.addTiles(this.currentTile);
+        }
+      }
     },
     currentMeldType: function() {
       if(this.current_meld_type === MeldTypes.CHI && Helpers.isHonorsSuit(this.$props.suit)) {
@@ -96,9 +107,18 @@ export default {
       return this.current_meld_type;
     },
     addTiles: function(tile) {
+      if(!tile.suit && !tile.value) {
+        this.$emit.setError('Invalid tile');
+        return;
+      }
+
       var tiles = [];
       // need error handling here
       if(this.current_meld_type === MeldTypes.CHI) {
+        if(tile.value > 7) {
+          this.$emit.setError('Invalid starting tile for chi');
+          return;
+        }
         tiles = [new Tile(tile.suit, tile.value), new Tile(tile.suit, tile.value + 1), new Tile(tile.suit, tile.value + 2)];
       }
       else {
