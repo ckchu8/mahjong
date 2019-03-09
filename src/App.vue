@@ -92,7 +92,6 @@
 </template>
 
 <script>
-import Meld from './models/meld.js'
 import Hand from './models/hand.js'
 import { MeldTypes } from './models/constants.js'
 import AdditionalOptions from './components/AdditionalOptions.vue'
@@ -121,7 +120,7 @@ export default {
     };
   },
   created: function() {
-    this.hand.addMeld(new Meld(false, MeldTypes.CHI, [], 0)); 
+    this.hand.createNextMeld();
   },
   computed: {
     promptWinner: function() {
@@ -143,9 +142,8 @@ export default {
         this.last_meld = true;
       }
       if(!this.last_meld) {
-        let next_id = this.hand.melds.length;
-        this.hand.addMeld(new Meld(false, MeldTypes.CHI, [], next_id));
-        this.current_meld_id = next_id;
+        let meld = this.hand.createNextMeld();
+        this.current_meld_id = meld.id;
       }
 
     },
@@ -161,7 +159,7 @@ export default {
     },
     reset: function() {
       this.hand = new Hand();
-      this.hand.addMeld(new Meld(false, MeldTypes.CHI, [], 0));
+      this.hand.createNextMeld();
       this.current_meld_id = 0;
       this.calculated = {};
       this.show_calculation = false;

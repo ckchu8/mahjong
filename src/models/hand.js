@@ -1,4 +1,5 @@
 import { Winds, Suits, MeldTypes } from './constants.js';
+import Meld from './meld.js';
 
 export default class Hand {
 
@@ -17,6 +18,17 @@ export default class Hand {
 
   addMeld(meld) {
     this.melds.push(meld);
+  }
+
+  createNextMeld(is_open, meld_type, tiles) {
+    let id = this.melds.length;
+    let set_is_open = is_open || false;
+    let set_meld_type = meld_type || MeldTypes.CHI;
+    let set_tiles = tiles || [];
+
+    let meld = new Meld(set_is_open, set_meld_type, set_tiles, id);
+    this.addMeld(meld);
+    return meld;
   }
 
   addWinningTile(meld, tile){

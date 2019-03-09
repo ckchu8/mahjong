@@ -12,11 +12,11 @@ var TestHelpers = {
     let additional = 0;
     switch(type) {
       case MeldTypes.PON:
-        additional = 2; break;
-      case MeldTypes.KAN:
         additional = 3; break;
-      case MeldTypes.PAIR:
+      case MeldTypes.KAN:
         additional = 4; break;
+      case MeldTypes.PAIR:
+        additional = 2; break;
     }
     let tiles = [];
     for(let i = 0; i < additional; ++i) {
