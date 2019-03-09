@@ -2,6 +2,7 @@
 
   <div class="btn-group">
     <button v-for="wind in winds"
+      :key="wind['name']"
       :class="{ btn: true, 'btn-secondary': true, active: checkActive(wind) }"
       @click="changeWind(wind)"
     >
@@ -12,7 +13,7 @@
 </template>
 
 <script>
-import { Winds } from '../classes/constants.js'
+import { Winds } from '../models/constants.js'
 
 export default {
   name: 'WindSelector',

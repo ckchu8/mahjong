@@ -92,9 +92,9 @@
 </template>
 
 <script>
-import Meld from './classes/meld.js'
-import Hand from './classes/hand.js'
-import { MeldTypes } from './classes/constants.js'
+import Meld from './models/meld.js'
+import Hand from './models/hand.js'
+import { MeldTypes } from './models/constants.js'
 import AdditionalOptions from './components/AdditionalOptions.vue'
 import WindSelector from './components/WindSelector.vue'
 import MeldForm from './components/MeldForm.vue'

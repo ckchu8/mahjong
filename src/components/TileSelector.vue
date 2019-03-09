@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import { MeldTypes, Suits } from '../classes/constants.js'
-import { Helpers } from '../classes/helpers.js'
-import Tile from '../classes/tile.js'
+import { MeldTypes, Suits } from '../models/constants.js'
+import { Helpers } from '../models/helpers.js'
+import Tile from '../models/tile.js'
 import Tiles from './Tiles.vue'
 
 export default {

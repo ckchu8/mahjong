@@ -54,8 +54,8 @@
 </template>
 
 <script>
-import { Suits } from '../classes/constants.js'
-import { Helpers } from '../classes/helpers.js'
+import { Suits } from '../models/constants.js'
+import { Helpers } from '../models/helpers.js'
 import TileSelector from './TileSelector.vue'
 
 export default {

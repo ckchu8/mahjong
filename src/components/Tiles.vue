@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { Helpers } from '../classes/helpers.js'
+import { Helpers } from '../models/helpers.js'
 
 export default {
   name: 'Tiles',
