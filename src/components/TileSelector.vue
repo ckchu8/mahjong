@@ -34,7 +34,7 @@
 
 <script>
 import { MeldTypes, Suits } from '../models/constants.js'
-import { Helpers } from '../models/helpers.js'
+import Meld from '../models/meld.js'
 import Tile from '../models/tile.js'
 import Tiles from './Tiles.vue'
 
@@ -70,7 +70,7 @@ export default {
     },
     meldTypes: function() {
       let meld_types = [];
-      meld_types.push( { name: MeldTypes.CHI, active: !Helpers.isHonorsSuit(this.$props.suit) } );
+      meld_types.push( { name: MeldTypes.CHI, active: !Tile.isHonorsSuit(this.$props.suit) } );
       meld_types.push( { name: MeldTypes.PON, active: true } );
       meld_types.push( { name: MeldTypes.KAN, active: true } );
       meld_types.push( { name: MeldTypes.PAIR, active: true } );
@@ -101,7 +101,7 @@ export default {
       }
     },
     currentMeldType: function() {
-      if(this.current_meld_type === MeldTypes.CHI && Helpers.isHonorsSuit(this.$props.suit)) {
+      if(this.current_meld_type === MeldTypes.CHI && Tile.isHonorsSuit(this.$props.suit)) {
         this.current_meld_type = MeldTypes.PON;
       }
       return this.current_meld_type;
@@ -112,29 +112,11 @@ export default {
         return;
       }
 
-      var tiles = [];
-      // need error handling here
-      if(this.current_meld_type === MeldTypes.CHI) {
-        if(tile.value > 7) {
-          this.$emit.setError('Invalid starting tile for chi');
-          return;
-        }
-        tiles = [new Tile(tile.suit, tile.value), new Tile(tile.suit, tile.value + 1), new Tile(tile.suit, tile.value + 2)];
+      if(this.current_meld_type === MeldTypes.CHI && tile.value > 7) {
+        this.$emit.setError('Invalid starting tile for chi');
+        return;
       }
-      else {
-        var additional = 0;
-        switch(this.current_meld_type) {
-          case MeldTypes.PAIR:
-            additional = 2; break;
-          case MeldTypes.PON:
-            additional = 3; break;
-          case MeldTypes.KAN:
-            additional = 4; break;
-        }
-        for(let i = 0; i < additional; ++i) {
-          tiles.push(new Tile(tile.suit, tile.value));
-        }
-      }
+      let tiles = Meld.createTiles(this.current_meld_type, tile.suit, tile.value);
       this.$emit('add-meld', { tiles: tiles, type: this.current_meld_type });
     },
   },

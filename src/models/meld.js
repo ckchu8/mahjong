@@ -1,4 +1,5 @@
 import { MeldTypes, Suits, Dragons } from './constants.js'
+import Tile from './tile.js'
 
 export default class Meld {
 
@@ -18,6 +19,31 @@ export default class Meld {
     return result.join(' ');
   }
 
+  static createTiles(type, suit, value) {
+    let tiles = [];
+    if(type == MeldTypes.CHI) {
+      if(value > 7) {
+        value = 7;
+      }
+      tiles = [new Tile(suit, value), new Tile(suit, value + 1), new Tile(suit, value + 2)];
+    }
+    else {
+      var additional = 0;
+      switch(type) {
+        case MeldTypes.PAIR:
+          additional = 2; break;
+        case MeldTypes.PON:
+          additional = 3; break;
+        case MeldTypes.KAN:
+          additional = 4; break;
+      }
+      for(let i = 0; i < additional; ++i) {
+        tiles.push(new Tile(suit, value));
+      }
+    }
+    return tiles;
+  }
+
   isChi() {
     return this.type === MeldTypes.CHI;
   }
@@ -35,7 +61,10 @@ export default class Meld {
   }
 
   isHonors() {
-    return this.tiles[0].isHonor()
+    if(this.tiles.length > 0) {
+      return this.tiles[0].isHonor();
+    }
+    return false;
   }
 
   isSimples() {

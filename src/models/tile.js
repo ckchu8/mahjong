@@ -39,6 +39,10 @@ export default class Tile {
   isHonor() {
     return this.isDragon() || this.isWind();
   }
+  
+  static isHonorsSuit(suit) {
+    return [ Suits.DRAGON, Suits.WIND ].indexOf(suit) !== -1;
+  }
 
   isSimple() {
     return !this.isHonor() && this.value >= 2 && this.value <= 8;
