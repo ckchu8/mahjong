@@ -1,5 +1,7 @@
 # Japanese Mahjong Scorer
 
+Scores Japanese Mahjong hands, such that you know how much each player must pay the winner. Created by @ckchu8, @keithepley, and @acubens42
+
 ## Project setup
 ```
 npm install
