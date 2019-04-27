@@ -65,8 +65,8 @@ test('checkValid with too many of one tile', () => {
 });
 
 test('createNextMeld with defaults', () => {
-  let hand = new Hand();
-  let meld = hand.createNextMeld();
+  let hand = new Hand(),
+      meld = hand.createNextMeld();
   expect(meld.id).toBe(0);
   expect(meld.is_open).toBeFalsy();
   expect(meld.tiles.length).toBe(0);
@@ -74,9 +74,10 @@ test('createNextMeld with defaults', () => {
 });
 
 test('createNextMeld with inputs', () => {
-  let hand = new Hand();
-  let tiles = Meld.createTiles(MeldTypes.PON, Suits.DOTS, 1);
-  let meld = hand.createNextMeld(true, MeldTypes.PON, tiles);
+  let hand = new Hand(),
+      tiles = Meld.createTiles(MeldTypes.PON, Suits.DOTS, 1),
+      meld = hand.createNextMeld(true, MeldTypes.PON, tiles);
+
   expect(meld.id).toBe(0);
   expect(meld.is_open).toBeTruthy();
   expect(meld.tiles).toEqual(tiles);

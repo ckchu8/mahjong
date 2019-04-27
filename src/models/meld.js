@@ -115,8 +115,9 @@ export default class Meld {
   }
 
   isGreen() {
-    let base_value = this.baseValue();
-    let suit = this.suit();
+    let base_value = this.baseValue(),
+        suit = this.suit();
+
     if(suit === Suits.DRAGON && base_value === Dragons.GREEN) {
       return true
     }
