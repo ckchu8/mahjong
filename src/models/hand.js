@@ -21,12 +21,12 @@ export default class Hand {
   }
 
   createNextMeld(is_open, meld_type, tiles) {
-    let id = this.melds.length;
-    let set_is_open = is_open || false;
-    let set_meld_type = meld_type || MeldTypes.CHI;
-    let set_tiles = tiles || [];
+    let id = this.melds.length,
+        set_is_open = is_open || false,
+        set_meld_type = meld_type || MeldTypes.CHI,
+        set_tiles = tiles || [],
+        meld = new Meld(set_is_open, set_meld_type, set_tiles, id);
 
-    let meld = new Meld(set_is_open, set_meld_type, set_tiles, id);
     this.addMeld(meld);
     return meld;
   }
@@ -36,7 +36,7 @@ export default class Hand {
   }
 
   to_s() {
-    var result = [];
+    let result = [];
     this.melds.forEach(meld => {
       result.push(meld.to_s());
     });
@@ -44,11 +44,11 @@ export default class Hand {
   }
 
   checkValid() {
-    let normal_melds = 0;
-    let pairs = 0;
-    let tile_lookup = {};
-    let count = 0;
-    let too_many_tiles = false;
+    let normal_melds = 0,
+        pairs = 0,
+        tile_lookup = {},
+        count = 0,
+        too_many_tiles = false;
 
     this.melds.forEach(meld => {
       if(meld.tiles.length > 0) {
@@ -71,8 +71,9 @@ export default class Hand {
       }
     });
 
-    let valid = true;
-    let message = [];
+    let valid = true,
+        message = [];
+
     if(!((normal_melds === 4 && pairs === 1) || (normal_melds === 0 && pairs === 7))) {
       valid = false;
       message.push('You do not have a valid hand combination.');
@@ -91,9 +92,9 @@ export default class Hand {
       return { error: check_result.message };
     }
 
-    let base_points = 0
-    let han = 0
-    let fu = 0
+    let base_points = 0,
+        han = 0,
+        fu = 0;
 
     let yakus = []
 
@@ -217,8 +218,8 @@ export default class Hand {
   }
 
   determineHan(yakus){
-    let han = 0
-    let is_concealed = this.isConcealed();
+    let han = 0,
+        is_concealed = this.isConcealed();
 
     if(this.riichi){
       yakus.push('Riichi')
@@ -377,8 +378,8 @@ export default class Hand {
       return 25
     }
 
-    let base = 20
-    let is_concealed = this.isConcealed();
+    let base = 20,
+        is_concealed = this.isConcealed();
 
     if(is_concealed && !this.tsumo){
       base += 10
@@ -483,8 +484,8 @@ export default class Hand {
   }
 
   isTriplePongs(){
-    let pons = this.getPonKanMelds()
-    let values = pons.map(pon => pon.baseValue())
+    let pons = this.getPonKanMelds(),
+        values = pons.map(pon => pon.baseValue())
 
     return values.some(function(val) {
       return pons.some(function(pon) {
@@ -644,8 +645,8 @@ export default class Hand {
   }
 
   isMixedTripleChow(){
-    let chis = this.getChiMelds()
-    let values = chis.map(chi => chi.baseValue())
+    let chis = this.getChiMelds(),
+        values = chis.map(chi => chi.baseValue())
 
     return values.some(function(val) {
       return chis.some(function(chi) {
@@ -673,10 +674,9 @@ export default class Hand {
   }
 
   numDoubleChow(){
-    let chis = this.getChiMelds()
-
-    let count = 0;
-    let orig_meld = null;
+    let chis = this.getChiMelds(),
+        count = 0,
+        orig_meld = null;
 
     if(!this.isConcealed()) {
       return count
